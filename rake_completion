@@ -3,7 +3,7 @@
 # Complete rake tasks script for bash
 # Save it somewhere and then add
 # complete -C path/to/script -o default rake
-# to your ~/.bashrc
+# to your ~/.bashrc.
 # Nicholas Seckar <nseckar@gmail.com>
 # Saimon Moore <saimon@webtypes.com>
 # http://www.webtypes.com/2006/03/31/rake-completion-script-that-handles-namespaces

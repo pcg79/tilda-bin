@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-## git-remote-branch: a simple script to ease the unnecessarily complex
+## git-pull-branch: a simple script to ease the unnecessarily complex
 ## task of "publishing" a branch, i.e., taking a local branch, creating a
 ## reference to it on a remote repo, and setting up the local branch to
 ## track the remote one, all in one go. you can even delete that remote

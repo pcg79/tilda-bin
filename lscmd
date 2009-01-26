@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require ENV['ACTIVIMPACT_HOME'] + '/config/boot'
+require 'commands/runner'

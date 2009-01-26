@@ -1,0 +1,46 @@
+#!/usr/bin/osascript
+
+property excludedApplicationNames : {"Terminal", "TextMate", "iChat", "xPad"}
+property includedApplicationNames : {"iTunes", "NetNewsWire"}
+
+tell application "Finder"
+       set _b to bounds of window of desktop
+       set _width to item 3 of _b
+       set _height to item 4 of _b
+end tell
+
+if _width is equal to 1920 then
+	repeat with theProcess in includedApplicationNames
+		set theProcessName to theProcess as string
+		try
+		  tell application "System Events" to set position of windows of process theProcess to {10, 25}
+		  tell application "System Events" to set size of windows of process theProcess to {1550, 1200}
+		end try
+	end repeat
+	
+	try
+		tell application "System Events" to set position of windows of process "TextMate" to {310, 25}
+	  tell application "System Events" to set size of windows of process "TextMate" to {1650, 1200}
+	end try
+	
+	try
+		tell application "Firefox"
+			activate
+		end tell
+		tell application "System Events" to set position of windows of process "Firefox" to {10, 25}
+	  tell application "System Events" to set size of windows in process "Firefox" to {1550, 1170}
+	end try
+
+	-- xPad does not seem to work.
+	try
+	  tell application "xPad"
+	    set the bounds of the first window to {-1200, 25, 1000, 700}
+	  end tell
+	end try
+	
+end if
+
+
+
+if _width is equal to 1440 then
+end

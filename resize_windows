@@ -1,0 +1,65 @@
+#!/usr/bin/osascript
+
+
+tell application "Finder"
+       set _b to bounds of window of desktop
+       set _width to item 3 of _b
+       set _height to item 4 of _b
+end tell
+
+if _width is equal to 1920 then
+       
+       try
+               tell application "NetNewsWire"
+                       activate
+                       set the bounds of the first window to {10, 25, 1550, 1200}
+               end tell
+       end try
+       
+       try
+               tell application "iTunes"
+                       activate
+                       set the bounds of the first window to {10, 25, 1550, 1200}
+               end tell
+       end try
+
+	try
+		tell application "TextMate"
+			activate
+			set the bounds of the first window to {310, 25, 1650, 1200}
+		end tell
+	end try
+
+       try
+               tell application "Firefox"
+                       activate
+                       set the bounds of the first window to {10, 25, 1650, 1200}
+               end tell
+       end try
+
+end if
+
+if _width is equal to 1440 then
+       
+       try
+               tell application "Firefox"
+                       activate
+                       set the bounds of the first window to {10, 25, 1250, 820}
+               end tell
+       end try
+       
+       try
+               tell application "NetNewsWire"
+                       activate
+                       set the bounds of the first window to {10, 25, 1250, 820}
+               end tell
+       end try
+       
+       try
+               tell application "iTunes"
+                       activate
+                       set the bounds of the first window to {10, 25, 1250, 820}
+               end tell
+       end try
+       
+end if

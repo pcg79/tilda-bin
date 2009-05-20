@@ -1,0 +1,8 @@
+#! /bin/bash
+
+user=pgeorge
+host=oracle.eyestreet.com
+localport=1521
+remoteport=1521
+
+source ssh-tunnel

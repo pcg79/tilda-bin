@@ -1,0 +1,1 @@
+rsync -avz --stats --exclude=.DS_Store . /Volumes/Backup/Songs/

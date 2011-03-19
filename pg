@@ -1,0 +1,36 @@
+#!/bin/bash
+
+PGCTL=/opt/local/lib/postgresql91/bin/pg_ctl
+
+start() 
+{
+        echo -n "Starting PostgreSQL server - "
+        sudo su postgres -c '/opt/local/lib/postgresql91/bin/pg_ctl -D /opt/local/var/db/postgresql91alpha2/defaultdb start -l /opt/local/var/log/postgresql91alpha2/postgres.log'
+        
+        return
+}
+
+stop() 
+{
+        echo -n "Stopping PostgreSQL server"
+        sudo su postgres -c '${PGCTL} -D /opt/local/var/db/postgresql91alpha2/defaultdb stop -s -m fast'
+        return
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: {start|stop|restart}"
+        exit 1
+        ;;
+esac
+exit $?

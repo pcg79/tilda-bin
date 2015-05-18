@@ -1,0 +1,1 @@
+rsync -a --verbose --progress --exclude=.DS_Store ~/Documents/Scanned\ Documents/ /Volumes/WD\ External/Scanned\ Documents/

@@ -80,11 +80,13 @@ class GoogleCalendar
   def open_next_meeting
     # Fetch the next event
     results = fetch_results
+    event = results.data.items.first
 
-    if event = results.data.items.first
+    if event && event.hangoutLink
       puts "Opening hangout for #{event.summary}"
       `open #{event.hangoutLink}`
     end
+  rescue
   end
 
   def list_upcoming(max_results=10)

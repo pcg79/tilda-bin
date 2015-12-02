@@ -24,6 +24,8 @@ ACTION_MAP = {
   'list'      => :list_upcoming
 }
 
+ONE_HOUR = 3600
+
 class GoogleCalendar
   attr_accessor :client, :calendar_api, :action
 
@@ -80,24 +82,39 @@ class GoogleCalendar
   def open_next_meeting
     # Fetch the next event
     results = fetch_results
+
+    puts "*** results.data.items = #{results.data.items}" if debug?
+
     event = results.data.items.first
+
+    puts "*** event.inspect = #{event.inspect}" if debug?
 
     if event && event.hangoutLink
       puts "Opening hangout for #{event.summary}"
-      `open #{event.hangoutLink}`
+      `open #{event.hangoutLink}` if !debug?
     end
   rescue
+    puts "Event #{event.summary} has no hangout link"
   end
 
   def list_upcoming(max_results=10)
     # Fetch the next events for the user
-    results = fetch_results( { maxResults: max_results } )
+    results = fetch_results( { maxResults: max_results, timeMax: (Time.now + ONE_HOUR * 1).iso8601 } )
 
     puts "Upcoming events:"
+    puts
     puts "No upcoming events found" if results.data.items.empty?
     results.data.items.each do |event|
       start = event.start.date || event.start.date_time
-      puts "- #{event.summary} (#{start})"
+      puts "- #{event.summary} (#{start}) #{event_link(event)}"
+    end
+  end
+
+  def event_link(event)
+    begin
+      "- #{event.hangoutLink}"
+    rescue NoMethodError
+      ''
     end
   end
 
@@ -107,15 +124,22 @@ class GoogleCalendar
       :maxResults => 1,
       :singleEvents => true,
       :orderBy => 'startTime',
-      :timeMin => Time.now.iso8601
+      :timeMin => Time.now.iso8601,
+      :timeMax => (Time.now + ONE_HOUR).iso8601
     }
 
     parameters = defaults.merge(options)
+
+    puts "*** parameters.inspect = #{parameters.inspect}" if debug?
 
     client.execute!(
       :api_method => calendar_api.events.list,
       :parameters => parameters
     )
+  end
+
+  def debug?
+    false
   end
 
 end

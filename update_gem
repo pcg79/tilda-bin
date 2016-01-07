@@ -66,6 +66,8 @@ class GemUpdater
   def create_pr(message=nil)
     message ||= "Updated #{gem_name}"
     puts run("hub pull-request -m '#{message}'")
+
+    # Delete branch after successful PR creation?
   end
 
   def log(msg)
@@ -75,10 +77,6 @@ class GemUpdater
   def run(command)
     log("Running:  #{command}")
     `#{command}`
-  end
-
-  def debug?
-    false
   end
 
 end

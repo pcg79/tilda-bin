@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+
+class GemUpdater
+  attr_reader :gem_name
+
+  def initialize(gem_name)
+    @gem_name = gem_name
+  end
+
+  def update
+    log "Starting the update process for gem #{gem_name}"
+
+    abort("You need the bundler gem before continuing (run: [sudo] gem install bundler)") if !bundler_gem_installed?
+
+    create_new_git_branch
+    update_gem
+    commit_and_push
+
+    create_pr if hub_installed?
+
+    log("All done")
+  end
+
+  private
+
+  def update_gem
+    run("bundle update #{gem_name}")
+  end
+
+  # If there's no bundler gem, the command still returns a newline.
+  def bundler_gem_installed?
+    !`gem list "^bundler$"`.chomp.empty?
+  end
+
+  # Time is appended to avoid branch name clashes
+  def create_new_git_branch
+    run("git checkout -b update_#{gem_name}_gem_#{Time.now.to_i}")
+  end
+
+  def commit_and_push
+    git_add_gemfile_lock
+    git_commit
+    git_push
+  end
+
+  def git_add_gemfile_lock
+    run("git add Gemfile.lock")
+  end
+
+  def git_commit(message=nil)
+    message ||= "Updated #{gem_name}"
+    run("git commit -m '#{message}'")
+  end
+
+  def git_push
+    run("git push")
+  end
+
+  def hub_installed?
+    `hub`
+    true
+  rescue Errno::ENOENT
+    false
+  end
+
+  def create_pr(message=nil)
+    message ||= "Updated #{gem_name}"
+    puts run("hub pull-request -m '#{message}'")
+  end
+
+  def log(msg)
+    puts msg
+  end
+
+  def run(command)
+    log("Running:  #{command}")
+    `#{command}`
+  end
+
+  def debug?
+    false
+  end
+
+end
+
+GemUpdater.new(ARGV[0]).update

@@ -1,0 +1,22 @@
+# Inspired heavily by Brian Ewins' scripts (http://code.livingsocial.net/bewins/scripts/blob/master/gimme)
+
+function calendar() {
+  # fetch appointments list for the day from calendar (minus Ethan's school calendar). Read it out.
+  # This needs icalBuddy, brew install ical-buddy to get it
+  icalBuddy -ec "Piney Branch Elementary School, Merchant Dev Time Off Calendar" -nc -iep "datetime,title" -ps "|, |" -po "datetime, title" -b "" eventsToday|perl -pe 's/^(\d+:\d+ .{2}) - (\d+:\d+ .{2})(.*)/At $1 to $2$3./||s/(.*)/All day event: $1./; s/^All day event: (\d+:\d+ .{2})/At $1/; s/CC/Credit Card/; s/OOO/Out of the office/;' | say -r 160 >/dev/null
+
+  # remove any scheduled tasks; I only use at for this
+  for job in $(atq | awk '{print $1}');do atrm $i;done 
+
+  # alerts when work meetings start
+  # if "at" doesn't run, it needs to be started:
+  # sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.atrun.plist
+  while read line; do
+    tokens=("${(s/, /)line}")
+    time=$tokens[1]
+    event=$tokens[2]
+    echo "say -r 160 You should join the $time call for $event." | at $time
+  done < <(icalBuddy -ic "Pat George (Work)" -ea -nrd -eed -nc -iep "datetime,title" -ps "|, |" -po "datetime" -b "" -df "" -tf "%H:%M" eventsToday)
+}
+
+

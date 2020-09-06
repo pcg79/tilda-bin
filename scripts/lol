@@ -1,0 +1,13 @@
+# Spectate LOL game by passing in the spectate info which you can get from lolnexus.com
+# USAGE:
+# spectate_lol  "spectator 216.133.234.17:8088 C10CHb9pcQ7/iu9UTWRrcgVsHdqU9HKe 1601393310 NA1"
+
+function spectate_lol() {
+  local CURDIR=$(pwd)
+  local LOLHOME="/Applications/League of Legends.app/Contents/LoL/RADS/solutions/lol_game_client_sln/releases/0.0.0.141/deploy/LeagueOfLegends.app/Contents/MacOS"
+  cd "$LOLHOME"
+
+  riot_launched=true "./LeagueofLegends" 8394 LoLLauncher "" "$*"
+
+  cd $CURDIR
+}

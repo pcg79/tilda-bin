@@ -1,0 +1,38 @@
+# LS aliases
+alias mc="cd ~/dev/merchant_center"
+alias smm="cd ~/dev/social-presence"
+
+# run pipeline tests
+function runpipelinetests {
+  date
+  export PARALLEL_TEST_PROCESSORS=6
+  be rake test:prepare_parallel
+
+  echo "***** FAST TESTS"
+  date
+  be rake test:fast
+
+  echo "***** UNITS"
+  date
+  be rake 'parallel:test[^test/unit]'
+
+  echo "***** FUNCTIONAL/INTEGRATION"
+  date
+  be rake 'parallel:test[^test/functional|^test/integ]'
+
+  echo "**** ENDRUN"
+  date
+}
+
+# update all Merchant apps
+
+function updateapps {
+  paths=( "merchant_center" "social-presence" "message_center" "merchant_messaging" "mc_live_events" "mc_chrome" )
+
+  for p in "${paths[@]}"
+  do
+    # ( cd ~/dev/$p && gpum && git push && bi ) &
+    cd ~/dev/$p && gpum && git push && bi
+  done
+}
+
